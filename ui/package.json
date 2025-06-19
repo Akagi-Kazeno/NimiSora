@@ -1,0 +1,30 @@
+{
+  "name": "ui",
+  "version": "1.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "unocss:build": "npx unocss src/**/*.ts src/**/*.html src/**/*.scss --out-file dist/ui/browser/uno.css"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "^20.0.4",
+    "@angular/compiler": "^20.0.4",
+    "@angular/core": "^20.0.4",
+    "@angular/forms": "^20.0.4",
+    "@angular/platform-browser": "^20.0.4",
+    "@angular/router": "^20.0.4",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^20.0.3",
+    "@angular/cli": "^20.0.3",
+    "@angular/compiler-cli": "^20.0.4",
+    "@unocss/preset-rem-to-px": "^66.2.3",
+    "typescript": "~5.8.2",
+    "unocss": "^66.2.3"
+  }
+}

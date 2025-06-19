@@ -1,0 +1,10 @@
+# Editor files
+.idea
+.vscode
+
+# Project files
+out/
+node_modules/
+dist/
+data/
+logs/
