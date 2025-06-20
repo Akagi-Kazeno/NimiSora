@@ -1,4 +1,4 @@
-import {app, BrowserWindow} from 'electron';
+import {app, BrowserWindow, ipcMain} from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 import {LoggerService, SQLiteService} from './services';
@@ -58,6 +58,22 @@ app.whenReady().then(async () => {
       win.webContents.send('set-theme', theme);
     });
   }
+
+  // --- 通用 SQL IPC ---
+  ipcMain.handle('sql', async (_event, sql: string, params?: any[]) => {
+    try {
+      // 只允许 select/insert/update/delete 语句
+      const lower = sql.trim().toLowerCase();
+      if (lower.startsWith('select')) {
+        return await sqliteService.query(sql, params);
+      } else {
+        return await sqliteService.run(sql, params);
+      }
+    } catch (e) {
+      logger.error(`SQL run failed: ${sql},error: ${JSON.stringify(e)}`);
+      return {error: e + ''};
+    }
+  });
 
   createWindow();
   app.on('activate', function () {

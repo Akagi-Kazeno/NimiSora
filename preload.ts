@@ -12,3 +12,9 @@ contextBridge.exposeInMainWorld('themeApi', {
     });
   }
 });
+
+contextBridge.exposeInMainWorld('electron', {
+  sql: async (sql: any, params: any) => {
+    return await ipcRenderer.invoke('sql', sql, params);
+  },
+});
