@@ -24,6 +24,7 @@ export async function initDatabase(sequelize: Sequelize) {
     description: {type: DataTypes.STRING},
     created_at: {type: DataTypes.INTEGER, defaultValue: () => Math.floor(Date.now())},
     updated_at: {type: DataTypes.INTEGER, defaultValue: () => Math.floor(Date.now())},
+    editable: {type: DataTypes.BOOLEAN, defaultValue: true, allowNull: false},
   }, {timestamps: false, freezeTableName: true});
 
   /**
@@ -103,8 +104,8 @@ export async function initDatabase(sequelize: Sequelize) {
    * database_log_clear_days: 数据库日志保留天数(默认30天)
    */
   const configDefaults = [
-    {key: 'app_name', value: 'NimiSora', description: 'application name'},
-    {key: 'app_version', value: '1.0.0', description: 'application version'},
+    {key: 'app_name', value: 'NimiSora', description: 'application name', editable: false},
+    {key: 'app_version', value: '1.0.0', description: 'application version', editable: false},
     {key: 'theme', value: 'system', description: 'default theme'},
     {key: 'temp_file_path', value: tempDir, description: 'default temporary file path'},
     {key: 'max_log_size', value: '10485760', description: 'maximum log file size in bytes (default 10MB)'},

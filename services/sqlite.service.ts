@@ -78,6 +78,12 @@ export class SQLiteService {
   // endregion
 
   // region app config actions
+  /**
+   * 更新应用配置
+   * @param key 配置键
+   * @param value 配置值
+   * @param description 描述
+   */
   async updateAppConfig(key: string, value: string, description?: string) {
     const timestamp = Math.floor(Date.now());
     // 检查是否存在该配置
@@ -97,6 +103,10 @@ export class SQLiteService {
     }
   }
 
+  /**
+   * 获取应用配置
+   * @param key
+   */
   async getAppConfig(key?: string) {
     let sql = 'SELECT * FROM app_config WHERE 1=1';
     const params: any[] = [];
