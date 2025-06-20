@@ -42,11 +42,10 @@ app.whenReady().then(async () => {
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, {recursive: true});
 
   const dbPath = path.join(dataDir, 'NimiSora.db');
-  const isDbExists = fs.existsSync(dbPath);
   const sqliteService = new SQLiteService(dbPath);
-  if (!isDbExists) {
-    await initDatabase(sqliteService['sequelize']);
-  }
+  await initDatabase(sqliteService['sequelize']);
+  // 数据库结构自动同步
+  await sqliteService['sequelize'].sync({alter: true});
   const logger = new LoggerService(undefined, sqliteService);
   logger.info('App started');
 
