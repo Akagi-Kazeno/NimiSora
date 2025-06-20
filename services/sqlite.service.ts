@@ -98,7 +98,7 @@ export class SQLiteService {
   }
 
   async getAppConfig(key?: string) {
-    let sql = 'SELECT * FROM app_config';
+    let sql = 'SELECT * FROM app_config WHERE 1=1';
     const params: any[] = [];
     if (key) {
       sql += ' WHERE key LIKE ?';
