@@ -4,8 +4,8 @@ function getTimestamp(): string {
   return new Date().toISOString();
 }
 
-const styleTimestampTag = 'background-color: #917BE8; color: white; padding: 1px 4px; border-radius: 3px; margin-right: 4px;';
-const styleModule = 'background-color: #7CABE8; color: white; padding: 1px 4px; border-radius: 3px; margin-right: 4px;';
+const styleTimestampTag = 'background-color: #F7B7BD; color: white; padding: 1px 4px; border-radius: 3px; margin-right: 4px;';
+const styleModule = 'background-color: #9DB5FD; color: white; padding: 1px 4px; border-radius: 3px; margin-right: 4px;';
 const styleLevel = (level: string) => {
   let bgColor = 'rgba(189, 182, 173, 1)';
   switch (level) {
@@ -25,7 +25,7 @@ const styleLevel = (level: string) => {
   return `background-color: ${bgColor}; color: white; padding: 1px 4px; border-radius: 3px; margin-right: 4px; font-weight: bold;`;
 };
 
-const styleNimiSoraPrefix = 'background-color: rgba(245, 200, 235, 1); color: white; padding: 1px 4px; border-radius: 3px; margin-right: 4px; font-weight: bold;';
+const styleNimiSoraPrefix = 'background-color: rgba(239, 191, 249, 1); color: white; padding: 1px 4px; border-radius: 3px; margin-right: 4px; font-weight: bold;';
 
 function createLogArgs(level: string, moduleName?: string, message?: any, ...optionalParams: any[]): any[] {
   const timestamp = getTimestamp();
