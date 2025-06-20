@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type {LogLevel} from './types/level';
 import type {SQLiteService} from './sqlite.service';
+import {app} from "electron";
 
 // 日志服务层
 export class LoggerService {
@@ -22,7 +23,9 @@ export class LoggerService {
     this.sqliteService = sqliteService;
     // 日志文件名添加当前日期
     const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-    this.logFile = (logFilePath || path.join(process.cwd(), 'logs', `app_${dateStr}.log`));
+    const isDev = process.env.NODE_ENV === 'development' || !app.isPackaged;
+    const logDir = (isDev ? path.join(process.cwd(), 'logs') : path.join(app.getPath('userData'), 'logs')).replace(/'/g, "''");
+    this.logFile = (logFilePath || path.join(logDir, `app_${dateStr}.log`));
     // 确保目录存在
     const dir = path.dirname(this.logFile);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, {recursive: true});
