@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import {LoggerService, SQLiteService} from './services';
 import {initDatabase} from './services/init-sqlite';
+import shell = Electron.shell;
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -72,6 +73,38 @@ app.whenReady().then(async () => {
     } catch (e) {
       logger.error(`SQL run failed: ${sql},error: ${JSON.stringify(e)}`);
       return {error: e + ''};
+    }
+  });
+
+  // --- 保存文件IPC ---
+  ipcMain.handle('saveFile', async (_event, filepath: string, filename: string, content: string) => {
+    try {
+      if (!fs.existsSync(filepath)) {
+        fs.mkdirSync(filepath, {recursive: true});
+      }
+
+      const filePath = path.join(filepath, filename);
+      fs.writeFileSync(filePath, content, 'utf8');
+      logger.info(`File saved: ${filePath}`);
+      return {success: true, filePath};
+    } catch (e) {
+      logger.error(`File save failed: ${e}`);
+      return {success: false, error: e + ''};
+    }
+  });
+
+  // --- 打开目录IPC ---
+  ipcMain.handle('openDirectory', async (_event, dirPath: string) => {
+    try {
+      if (!fs.existsSync(dirPath)) {
+        fs.mkdirSync(dirPath, {recursive: true});
+      }
+      await shell.openPath(dirPath);
+      logger.info(`Directory opened: ${dirPath}`);
+      return {success: true, dirPath};
+    } catch (e) {
+      logger.error(`Failed open directory: ${e}`);
+      return {success: false, error: e + ''};
     }
   });
 
