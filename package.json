@@ -5,9 +5,9 @@
   "license": "MIT",
   "description": "Electron application with Angular frontend",
   "scripts": {
-    "dev": "cd ui && ng build && npm run unocss:build && node ./patch-base-href.js && cd .. && tsc && electron ./dist/main.js",
-    "build": "cd ui && ng build --configuration production && npm run unocss:build && node ./patch-base-href.js && cd .. && tsc && electron-forge make",
-    "electron:start": "tsc && electron ./dist/main.js",
+    "dev": "cd ui && ng build && npm run unocss:build && node ./patch-base-href.js && cd .. && tsc && shx cp -r assets dist/assets && electron ./dist/main.js",
+    "build": "cd ui && ng build --configuration production && npm run unocss:build && node ./patch-base-href.js && cd .. && tsc && shx cp -r assets dist/assets && electron-forge make",
+    "electron:start": "tsc && shx cp -r assets dist/assets && electron ./dist/main.js",
     "package:linux-arm64": "npx electron-forge make --platform=linux --arch=arm64",
     "package:linux-x64": "npx electron-forge make --platform=linux --arch=x64",
     "package:mac-arm64": "npx electron-forge make --platform=darwin --arch=arm64",
@@ -29,6 +29,7 @@
     "@electron-forge/maker-dmg": "^7.8.1",
     "@electron-forge/maker-zip": "^7.8.1",
     "electron": "^36.5.0",
+    "shx": "^0.4.0",
     "typescript": "^5.8.3"
   },
   "config": {
