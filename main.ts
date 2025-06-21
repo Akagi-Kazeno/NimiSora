@@ -108,6 +108,61 @@ app.whenReady().then(async () => {
     }
   });
 
+  // --- 移动目录IPC ---
+  ipcMain.handle('moveDirectory', async (_event, oldPath: string, newPath: string) => {
+    try {
+      if (!oldPath || !newPath) {
+        return {success: false, error: 'Source and destination paths cannot be empty.'};
+      }
+      if (!fs.existsSync(oldPath)) {
+        return {success: false, error: `Source directory does not exist: ${oldPath}`};
+      }
+      if (path.resolve(oldPath) === path.resolve(newPath)) {
+        return {success: false, error: 'Source and destination paths are the same.'};
+      }
+      const targetParent = path.dirname(newPath);
+      if (!fs.existsSync(targetParent)) {
+        fs.mkdirSync(targetParent, {recursive: true});
+      }
+      // 如果目标目录已存在，合并内容
+      if (fs.existsSync(newPath)) {
+        logger.info(`Directory already exists, merging: ${oldPath} -> ${newPath}`);
+        // 如果目标目录已存在，递归复制内容
+        const copyRecursive = (src: string, dest: string) => {
+          const stat = fs.statSync(src);
+          if (stat.isDirectory()) {
+            if (!fs.existsSync(dest)) {
+              fs.mkdirSync(dest, {recursive: true});
+            }
+            const files = fs.readdirSync(src);
+            for (const file of files) {
+              copyRecursive(path.join(src, file), path.join(dest, file));
+            }
+          } else {
+            fs.copyFileSync(src, dest);
+          }
+        };
+        // copy all files from oldPath to newPath
+        const files = fs.readdirSync(oldPath);
+        for (const file of files) {
+          const srcFile = path.join(oldPath, file);
+          const destFile = path.join(newPath, file);
+          copyRecursive(srcFile, destFile);
+        }
+        // 删除源目录
+        fs.rmSync(oldPath, {recursive: true, force: true});
+      } else {
+        // 直接移动目录
+        fs.renameSync(oldPath, newPath);
+      }
+      logger.info(`Directory moved from ${oldPath} to ${newPath}`);
+      return {success: true, oldPath, newPath};
+    } catch (e) {
+      logger.error(`Failed move directory: ${e}`);
+      return {success: false, error: e + ''};
+    }
+  });
+
   createWindow();
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();

@@ -8,7 +8,7 @@
  */
 export async function insertLog(level: string, event: string, message: string, context?: string, cost_time?: number) {
   const timestamp = Math.floor(Date.now());
-  return (window as any).electron.sql.run(
+  return window.electron.sql(
     `INSERT INTO app_log (level, event, message, context, timestamp, cost_time)
      VALUES (?, ?, ?, ?, ?, ?)`,
     [level, event, message, context || '', timestamp, cost_time || null]
@@ -52,5 +52,5 @@ export async function getLogs(filters: {
     sql += ' ORDER BY timestamp DESC';
   }
   sql += ' ORDER BY timestamp DESC';
-  return (window as any).electron.sql.query(sql, params);
+  return window.electron.sql(sql, params);
 }

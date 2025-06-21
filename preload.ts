@@ -26,4 +26,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   openDirectory: async (dirPath: string) => {
     return await ipcRenderer.invoke('openDirectory', dirPath);
   },
+  moveDirectory: async (oldPath: string, newPath: string) => {
+    return await ipcRenderer.invoke('moveDirectory', oldPath, newPath);
+  }
 });

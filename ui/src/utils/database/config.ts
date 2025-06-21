@@ -7,10 +7,10 @@
 export async function updateAppConfig(key: string, value: string, description?: string) {
   const timestamp = Math.floor(Date.now());
   // 检查是否存在该配置
-  const existing = await (window as any).electron.sql.query("SELECT * FROM app_config WHERE key = ? LIMIT 1", [key]);
+  const existing = await window.electron.sql("SELECT * FROM app_config WHERE key = ? LIMIT 1", [key]);
   if (existing.length > 0) {
     // 更新现有配置
-    return (window as any).electron.sql.run(
+    return window.electron.sql(
       `UPDATE app_config
        SET value       = ?,
            description = ?,
@@ -35,5 +35,5 @@ export async function getAppConfig(key?: string) {
     params.push(`%${key}%`);
   }
   sql += ' ORDER BY id DESC';
-  return (window as any).electron.sql.query(sql, params);
+  return window.electron.sql(sql, params);
 }
