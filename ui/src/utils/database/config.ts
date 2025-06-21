@@ -37,3 +37,18 @@ export async function getAppConfig(key?: string) {
   sql += ' ORDER BY id DESC';
   return window.electron.sql(sql, params);
 }
+
+/**
+ * 获取应用配置总数
+ * @param key
+ */
+export async function getAppConfigCount(key?: string): Promise<number> {
+  let sql = 'SELECT COUNT(*) as count FROM app_config WHERE 1=1';
+  const params: any[] = [];
+  if (key) {
+    sql += ' AND key LIKE ?';
+    params.push(`%${key}%`);
+  }
+  const result = await window.electron.sql(sql, params);
+  return result[0].count || 0;
+}

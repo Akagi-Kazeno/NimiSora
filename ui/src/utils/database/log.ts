@@ -54,3 +54,35 @@ export async function getLogs(filters: {
   sql += ' ORDER BY timestamp DESC';
   return window.electron.sql(sql, params);
 }
+
+/**
+ * 获取日志总数
+ * @param filters { level?: string, event?: string, startTime?: number, endTime?: number }
+ */
+export async function getLogCount(filters: {
+  level?: string,
+  event?: string,
+  startTime?: number,
+  endTime?: number
+} = {}) {
+  let sql = 'SELECT COUNT(*) as count FROM app_log WHERE 1=1';
+  const params: any[] = [];
+  if (filters.level) {
+    sql += ' AND level = ?';
+    params.push(filters.level);
+  }
+  if (filters.event) {
+    sql += ' AND event LIKE ?';
+    params.push(`%${filters.event}%`);
+  }
+  if (filters.startTime) {
+    sql += ' AND timestamp >= ?';
+    params.push(filters.startTime);
+  }
+  if (filters.endTime) {
+    sql += ' AND timestamp <= ?';
+    params.push(filters.endTime);
+  }
+  const result = await window.electron.sql(sql, params);
+  return result[0].count;
+}
