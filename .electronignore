@@ -1,0 +1,48 @@
+# TypeScript 源文件
+*.ts
+!dist/**
+tsconfig.json
+
+# 开发工具配置
+.editorconfig
+.gitignore
+.git/
+.idea/
+.vscode/
+
+# 文档
+README.md
+LICENSE
+
+# 日志和数据
+logs/
+data/
+
+# UI 源代码 (保留构建后的文件)
+ui/src/
+ui/node_modules/
+ui/package.json
+ui/package-lock.json
+ui/angular.json
+ui/tsconfig*.json
+ui/uno.config.ts
+ui/patch-base-href.js
+ui/README.md
+# 明确保留构建后的文件 - 这些文件会通过 extraResource 单独处理
+# !ui/dist/
+
+# 构建输出目录
+out/
+
+# 开发依赖
+node_modules/.bin/
+node_modules/**/test/
+node_modules/**/tests/
+node_modules/**/*.md
+node_modules/**/.git/
+
+# 临时文件
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db

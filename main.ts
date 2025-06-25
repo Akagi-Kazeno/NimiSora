@@ -1,9 +1,8 @@
-import {app, BrowserWindow, ipcMain} from 'electron';
+import {app, BrowserWindow, ipcMain, shell} from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 import {LoggerService, SQLiteService} from './services';
 import {initDatabase} from './services/init-sqlite';
-import shell = Electron.shell;
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -15,11 +14,41 @@ function createWindow() {
       nodeIntegration: false
     }
   });
+
   // Load the Angular application
-  const angularIndexPath = path.join(process.cwd(), 'ui', 'dist', 'ui', 'browser', 'index.html');
-  win.loadFile(angularIndexPath);
+  let angularIndexPath: string;
+  if (app.isPackaged) {
+    // 在打包环境下，从 extraResources 加载
+    angularIndexPath = path.join(process.resourcesPath, 'browser', 'index.html');
+    console.log('Packaged mode - Loading from:', angularIndexPath);
+    console.log('File exists:', fs.existsSync(angularIndexPath));
+    if (!fs.existsSync(angularIndexPath)) {
+      console.log('Resources path:', process.resourcesPath);
+      console.log('Available files in resources:', fs.existsSync(process.resourcesPath) ? fs.readdirSync(process.resourcesPath) : 'Resources path not found');
+      // 检查是否有 browser 目录
+      const browserPath = path.join(process.resourcesPath, 'browser');
+      if (fs.existsSync(browserPath)) {
+        console.log('Files in browser directory:', fs.readdirSync(browserPath));
+      }
+    }
+  } else {
+    // 开发环境下使用原路径
+    angularIndexPath = path.join(process.cwd(), 'ui', 'dist', 'ui', 'browser', 'index.html');
+    console.log('Development mode - Loading from:', angularIndexPath);
+  }
+
+  win.loadFile(angularIndexPath).catch(err => {
+    console.error('Failed to load Angular app:', err);
+    // 如果主路径失败，尝试备用路径
+    if (app.isPackaged) {
+      const fallbackPath = path.join(__dirname, '..', 'ui', 'index.html');
+      console.log('Trying fallback path:', fallbackPath);
+      return win.loadFile(fallbackPath);
+    }
+  });
   // Hide the menu bar
   win.setMenu(null);
+
   // DevTools
   win.webContents.on('before-input-event', (event, input) => {
     if (input.key === 'F12' && input.type === 'keyDown') {

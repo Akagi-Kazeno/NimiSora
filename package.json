@@ -2,19 +2,22 @@
   "name": "nimisora",
   "version": "1.0.0",
   "main": "dist/main.js",
+  "author": "Akagi-Kazeno",
   "license": "MIT",
   "description": "Electron application with Angular frontend",
   "scripts": {
     "dev": "cd ui && ng build && npm run unocss:build && node ./patch-base-href.js && cd .. && tsc && shx cp -r assets dist/assets && electron ./dist/main.js",
     "build": "cd ui && ng build --configuration production && npm run unocss:build && node ./patch-base-href.js && cd .. && tsc && shx cp -r assets dist/assets && electron-forge make",
+    "build:clean": "shx rm -rf dist && shx rm -rf out && cd ui && ng build --configuration production && npm run unocss:build && node ./patch-base-href.js && cd .. && tsc && shx cp -r assets dist/assets",
+    "package": "npm run build:clean && electron-forge make",
     "electron:start": "tsc && shx cp -r assets dist/assets && electron ./dist/main.js",
-    "package:linux-arm64": "npx electron-forge make --platform=linux --arch=arm64",
-    "package:linux-x64": "npx electron-forge make --platform=linux --arch=x64",
-    "package:mac-arm64": "npx electron-forge make --platform=darwin --arch=arm64",
-    "package:mac-x64": "npx electron-forge make --platform=darwin --arch=x64",
-    "package:win-arm64": "npx electron-forge make --platform=win32 --arch=arm64",
-    "package:win-ia32": "npx electron-forge make --platform=win32 --arch=ia32",
-    "package:win-x64": "npx electron-forge make --platform=win32 --arch=x64",
+    "package:linux-arm64": "npm run build:clean && npx electron-forge make --platform=linux --arch=arm64",
+    "package:linux-x64": "npm run build:clean && npx electron-forge make --platform=linux --arch=x64",
+    "package:mac-arm64": "npm run build:clean && npx electron-forge make --platform=darwin --arch=arm64",
+    "package:mac-x64": "npm run build:clean && npx electron-forge make --platform=darwin --arch=x64",
+    "package:win-arm64": "npm run build:clean && npx electron-forge make --platform=win32 --arch=arm64",
+    "package:win-ia32": "npm run build:clean && npx electron-forge make --platform=win32 --arch=ia32",
+    "package:win-x64": "npm run build:clean && npx electron-forge make --platform=win32 --arch=x64",
     "postbuild": "node ./ui/patch-base-href.js"
   },
   "dependencies": {
@@ -35,6 +38,32 @@
   },
   "config": {
     "forge": {
+      "packagerConfig": {
+        "asar": true,
+        "ignore": [
+          "^\\/services\\/.*\\.ts$",
+          "^\\/.*\\.ts$",
+          "^\\/tsconfig\\.json$",
+          "^\\/\\.git",
+          "^\\/\\.idea",
+          "^\\/\\.editorconfig",
+          "^\\/\\.gitignore",
+          "^\\/README\\.md$",
+          "^\\/ui\\/src",
+          "^\\/ui\\/node_modules",
+          "^\\/ui\\/.*\\.ts$",
+          "^\\/ui\\/.*\\.json$",
+          "^\\/ui\\/.*\\.js$",
+          "^\\/ui\\/dist",
+          "^\\/out",
+          "^\\/node_modules\\/.*\\/test",
+          "^\\/node_modules\\/.*\\/tests",
+          "^\\/node_modules\\/.*\\/\\..*"
+        ],
+        "extraResource": [
+          "ui/dist/ui/browser"
+        ]
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-deb",
