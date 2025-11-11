@@ -11,12 +11,12 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^20.3.10",
-    "@angular/cdk": "~20.0.3",
+    "@angular/cdk": "~20.2.12",
     "@angular/common": "^20.3.10",
     "@angular/compiler": "^20.3.10",
     "@angular/core": "^20.3.10",
     "@angular/forms": "^20.3.10",
-    "@angular/material": "~20.0.3",
+    "@angular/material": "~20.2.12",
     "@angular/platform-browser": "^20.3.10",
     "@angular/router": "^20.3.10",
     "rxjs": "~7.8.0",
@@ -26,8 +26,8 @@
     "@angular/build": "^20.3.9",
     "@angular/cli": "^20.3.9",
     "@angular/compiler-cli": "^20.3.10",
-    "@unocss/preset-rem-to-px": "^66.2.3",
+    "@unocss/preset-rem-to-px": "^66.5.5",
     "typescript": "~5.8.2",
-    "unocss": "^66.2.3"
+    "unocss": "^66.5.5"
   }
 }
